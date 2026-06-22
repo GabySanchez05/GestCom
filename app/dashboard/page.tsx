@@ -276,7 +276,7 @@ export default async function DashboardPage() {
 
   // RESIDENT DASHBOARD
   let currentDebt = 0;
-  let unitInfo = null;
+  let unitInfo: any = null;
   let distributions: any[] = [];
 
   if (profile?.unit_id) {
