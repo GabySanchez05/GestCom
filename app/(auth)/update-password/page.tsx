@@ -121,7 +121,7 @@ export default function UpdatePasswordPage() {
     handleSessionAndParams()
 
     // Escuchamos los cambios del estado de autenticación
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event: any, session: any) => {
       console.log("Auth event detectado:", event)
       setDiagnostics(prev => ({
         ...prev,
