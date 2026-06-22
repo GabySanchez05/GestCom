@@ -27,8 +27,8 @@ export default async function DashboardLayout({ children }: { children: ReactNod
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col lg:pl-64 h-full">
-        <Header />
+      <div className="flex-1 flex flex-col lg:pl-64 h-full w-full relative">
+        <Header role={role} />
         
         <main className="flex-1 overflow-y-auto p-6 md:p-8">
           <div className="mx-auto max-w-7xl animate-fade-in">

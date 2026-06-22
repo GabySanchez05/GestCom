@@ -5,8 +5,9 @@ import { createClient } from "@/lib/supabase/server";
 import { UserNav } from "./UserNav";
 import { NotificationBell } from "./NotificationBell";
 import { GlobalSearch } from "./GlobalSearch";
+import { MobileSidebar } from "./MobileSidebar";
 
-export async function Header() {
+export async function Header({ role = "resident" }: { role?: string }) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   
@@ -17,9 +18,7 @@ export async function Header() {
   return (
     <header className="h-16 flex items-center justify-between px-6 bg-card border-b border-border">
       <div className="flex items-center lg:hidden">
-        <Button variant="ghost" size="icon" className="mr-2">
-          <Menu className="h-5 w-5" />
-        </Button>
+        <MobileSidebar role={role} />
       </div>
       
       <div className="hidden lg:flex flex-1 max-w-md">
