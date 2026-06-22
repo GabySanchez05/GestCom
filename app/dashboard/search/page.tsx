@@ -93,7 +93,7 @@ export default async function SearchResultsPage({
                 Áreas Comunes
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {amenities.map(a => (
+                {amenities.map((a: any) => (
                   <Link href="/dashboard/amenities" key={a.id} className="block group">
                     <div className="bg-card p-4 rounded-xl border border-border group-hover:border-primary/50 group-hover:shadow-md transition-all">
                       <h4 className="font-semibold text-foreground group-hover:text-primary transition-colors">{a.name}</h4>
@@ -113,7 +113,7 @@ export default async function SearchResultsPage({
                 Unidades
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {units.map(u => (
+                {units.map((u: any) => (
                   <Link href={`/dashboard/units/${u.id}`} key={u.id} className="block group">
                     <div className="bg-card p-4 rounded-xl border border-border group-hover:border-primary/50 group-hover:shadow-md transition-all flex justify-between items-center">
                       <div>
@@ -135,7 +135,7 @@ export default async function SearchResultsPage({
                 Residentes
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {residents.map(r => (
+                {residents.map((r: any) => (
                   <Link href="/dashboard/residents" key={r.id} className="block group">
                     <div className="bg-card p-4 rounded-xl border border-border group-hover:border-primary/50 group-hover:shadow-md transition-all">
                       <h4 className="font-semibold text-foreground group-hover:text-primary transition-colors">{r.full_name || "Sin nombre"}</h4>
@@ -155,7 +155,7 @@ export default async function SearchResultsPage({
                 Incidencias
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {incidents.map(i => (
+                {incidents.map((i: any) => (
                   <Link href="/dashboard/incidents" key={i.id} className="block group">
                     <div className="bg-card p-4 rounded-xl border border-border group-hover:border-primary/50 group-hover:shadow-md transition-all">
                       <h4 className="font-semibold text-foreground group-hover:text-primary transition-colors">{i.title}</h4>
