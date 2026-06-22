@@ -282,7 +282,7 @@ export default function LoginPage() {
             <span className="text-xs text-muted-foreground whitespace-nowrap">o continúa con</span>
             <div className="flex-1 h-px bg-border/60" />
           </div>
-          <form action={loginWithGoogle}>
+          <form action={async () => { await loginWithGoogle() }}>
             <button
               id="google-login-btn"
               type="submit"
