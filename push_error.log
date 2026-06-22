@@ -1,0 +1,55 @@
+Initialising login role...
+Connecting to remote database...
+Do you want to push these migrations to the remote database?
+ • 001_initial_schema.sql
+
+ [Y/n] 
+Applying migration 001_initial_schema.sql...
+NOTICE (42710): extension "pgcrypto" already exists, skipping
+ERROR: too many parameters specified for RAISE (SQLSTATE 42601)                                 
+At statement: 12                                                                                
+-- ============================================================                                 
+-- FUNCTION: distribute_expense                                                                 
+-- Distributes a common_expense across all active units                                         
+-- ============================================================                                 
+CREATE OR REPLACE FUNCTION distribute_expense(p_expense_id UUID)                                
+RETURNS VOID LANGUAGE plpgsql SECURITY DEFINER AS $$                                            
+DECLARE                                                                                         
+  v_total_amount    NUMERIC(12,2);                                                              
+  v_aliquot_sum     NUMERIC(6,4);                                                               
+  v_unit            RECORD;                                                                     
+  v_assigned        NUMERIC(12,2);                                                              
+BEGIN                                                                                           
+  -- Get expense amount                                                                         
+  SELECT total_amount INTO v_total_amount                                                       
+  FROM common_expenses WHERE id = p_expense_id;                                                 
+                                                                                                
+  IF NOT FOUND THEN                                                                             
+    RAISE EXCEPTION 'Expense not found: %', p_expense_id;                                       
+  END IF;                                                                                       
+                                                                                                
+  -- Validate aliquots sum to 100                                                               
+  SELECT SUM(aliquot_percentage) INTO v_aliquot_sum                                             
+  FROM units WHERE status = 'active';                                                           
+                                                                                                
+  IF ABS(v_aliquot_sum - 100) > 0.01 THEN                                                       
+    RAISE EXCEPTION 'Active units aliquots must sum to 100%%. Current sum: %%', v_aliquot_sum;  
+  END IF;                                                                                       
+                                                                                                
+  -- Delete previous distributions if any (re-distribute)                                       
+  DELETE FROM expense_distributions WHERE expense_id = p_expense_id;                            
+                                                                                                
+  -- Insert distributions per unit                                                              
+  FOR v_unit IN                                                                                 
+    SELECT id, aliquot_percentage FROM units WHERE status = 'active'                            
+  LOOP                                                                                          
+    v_assigned := ROUND(v_total_amount * (v_unit.aliquot_percentage / 100), 2);                 
+    INSERT INTO expense_distributions (expense_id, unit_id, assigned_amount, aliquot_percentage)
+    VALUES (p_expense_id, v_unit.id, v_assigned, v_unit.aliquot_percentage);                    
+  END LOOP;                                                                                     
+                                                                                                
+  -- Mark expense as distributed                                                                
+  UPDATE common_expenses SET is_distributed = TRUE WHERE id = p_expense_id;                     
+END;                                                                                            
+$$                                                                                              
+Try rerunning the command with --debug to troubleshoot the error.

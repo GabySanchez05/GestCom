@@ -1,0 +1,23 @@
+services:
+  app:
+    container_name: app-dev
+    image: node:20-alpine
+    working_dir: /app
+    # Mount your local source code into the container
+    volumes:
+      - .:/app
+      - /app/node_modules  # Anonymous volume to avoid overwriting node_modules inside container
+      - /app/.next         # Anonymous volume for .next build cache
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      - ADMIN_EMAIL=${ADMIN_EMAIL}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - WATCHPACK_POLLING=true   # Enables file watching inside Docker on Windows
+      - CHOKIDAR_USEPOLLING=true # Enables hot reload polling for Windows host
+    command: sh -c "npm install && npm run dev"
+    restart: unless-stopped
